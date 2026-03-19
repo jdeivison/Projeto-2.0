@@ -1,10 +1,21 @@
+// --- Funções do Modal de Aviso ---
+function exibirAviso(mensagem) {
+    document.getElementById('modal-aviso-mensagem').innerText = mensagem;
+    document.getElementById('modal-aviso').style.display = 'block';
+}
+
+function fecharAviso() {
+    document.getElementById('modal-aviso').style.display = 'none';
+}
+// ------------------------------------
+
 // Adicionar item ao estoque com custo
 function adicionarEstoque() {
   const nome = document.getElementById("est-nome").value;
   const qtd = parseInt(document.getElementById("est-qtd").value);
   const custo = parseFloat(document.getElementById("est-custo").value) || 0;
 
-  if (!nome || !qtd) return alert("Preencha nome e quantidade!");
+  if (!nome || !qtd) return exibirAviso("Preencha nome e quantidade!");
 
   let estoque = JSON.parse(localStorage.getItem("estoque")) || [];
 
@@ -66,7 +77,7 @@ function abrirFluxoRemessa(index) {
   const qtdSaida = parseInt(prompt(`Quantidade (Máximo ${item.qtd}):`, "1"));
 
   if (!motivo || isNaN(qtdSaida) || qtdSaida > item.qtd)
-    return alert("Operação cancelada ou quantidade inválida.");
+    return exibirAviso("Operação cancelada ou quantidade inválida.");
 
   const motivosMap = { 1: "Garantia", 2: "Conserto", 3: "Devolução" };
   const motivoFinal = motivosMap[motivo] || "Outros";
@@ -87,7 +98,7 @@ function abrirFluxoRemessa(index) {
   });
   localStorage.setItem("remessas", JSON.stringify(remessas));
 
-  alert(`Sucesso! ${qtdSaida} unidade(s) enviada(s) para ${motivoFinal}.`);
+  exibirAviso(`Sucesso! ${qtdSaida} unidade(s) enviada(s) para ${motivoFinal}.`);
   renderizarEstoque();
   atualizarDashboard();
 }

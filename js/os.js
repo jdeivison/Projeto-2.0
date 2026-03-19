@@ -1,3 +1,14 @@
+// --- Funções do Modal de Aviso ---
+function exibirAviso(mensagem) {
+    document.getElementById('modal-aviso-mensagem').innerText = mensagem;
+    document.getElementById('modal-aviso').style.display = 'block';
+}
+
+function fecharAviso() {
+    document.getElementById('modal-aviso').style.display = 'none';
+}
+// ------------------------------------
+
 const bancoDadosFake = {
   marcas: [
     "Samsung",
@@ -117,12 +128,12 @@ function salvarOS(event) {
     inventario: document.getElementById("inventario").value,
     dataCadastro: new Date().toLocaleDateString(),
   };
-  if (!novaOS.serie) return alert("Série Obrigatória!");
+  if (!novaOS.serie) return exibirAviso("Série Obrigatória!");
   let historico = JSON.parse(localStorage.getItem("meu_sistema_os")) || [];
   historico.push(novaOS);
   localStorage.setItem("meu_sistema_os", JSON.stringify(historico));
   bancoDadosFake.historicoServicos.push(novaOS);
-  alert("✅ OS Salva!");
+  exibirAviso("✅ OS Salva!");
   document.getElementById("os-form").reset();
   atualizarDashboard();
 }
@@ -176,6 +187,23 @@ function registrarPagamentoManual() {
   const valor = parseFloat(document.getElementById("fin-valor").value);
   if (!desc || !valor) return;
   salvarNoFinanceiro(desc, valor, "Saída");
+  document.getElementById("fin-desc").value = "";
+  document.getElementById("fin-valor").value = "";
+}
+
+function registrarFinanceiroManual() {
+  const desc = document.getElementById("fin-desc").value;
+  const valor = parseFloat(document.getElementById("fin-valor").value);
+  const tipo = document.getElementById("fin-tipo").value;
+
+  if (!desc || !valor) {
+    return exibirAviso("Por favor, preencha descrição e valor.");
+  }
+  if (isNaN(valor) || valor <= 0) {
+    return exibirAviso("O valor deve ser um número positivo.");
+  }
+
+  salvarNoFinanceiro(desc, valor, tipo);
   document.getElementById("fin-desc").value = "";
   document.getElementById("fin-valor").value = "";
 }
@@ -236,7 +264,7 @@ function converterEmVenda() {
     inventario: document.getElementById("inventario").value,
     cliente: document.getElementById("documento-cliente").value,
   };
-  if (!dados.serie) return alert("Selecione um equipamento!");
+  if (!dados.serie) return exibirAviso("Selecione um equipamento!");
   const valor = parseFloat(prompt("Valor da Venda:"));
   if (isNaN(valor)) return;
   salvarNoFinanceiro(`Venda SN: ${dados.serie}`, valor, "Entrada");

@@ -1,3 +1,14 @@
+// --- Funções do Modal de Aviso ---
+function exibirAviso(mensagem) {
+    document.getElementById('modal-aviso-mensagem').innerText = mensagem;
+    document.getElementById('modal-aviso').style.display = 'block';
+}
+
+function fecharAviso() {
+    document.getElementById('modal-aviso').style.display = 'none';
+}
+// ------------------------------------
+
 // Função para transformar OS em Venda com Verso da Nota
 function converterEmVenda() {
   const dados = {
@@ -11,7 +22,7 @@ function converterEmVenda() {
   };
 
   if (!dados.serie || !dados.marca)
-    return alert("Dados do equipamento incompletos para venda!");
+    return exibirAviso("Dados do equipamento incompletos para venda!");
 
   const valorVenda = parseFloat(
     prompt("Informe o valor final da venda/serviço:", "0.00"),

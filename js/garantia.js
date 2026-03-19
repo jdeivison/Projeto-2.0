@@ -1,3 +1,14 @@
+// --- Funções do Modal de Aviso ---
+function exibirAviso(mensagem) {
+    document.getElementById('modal-aviso-mensagem').innerText = mensagem;
+    document.getElementById('modal-aviso').style.display = 'block';
+}
+
+function fecharAviso() {
+    document.getElementById('modal-aviso').style.display = 'none';
+}
+// ------------------------------------
+
 // Lógica de Remessa, Conserto e Devolução
 const Garantia = {
     remessas: [],
@@ -13,7 +24,7 @@ const Garantia = {
         };
 
         this.remessas.push(novaRemessa);
-        alert(`Guia de ${motivo} gerada para o equipamento SN: ${dadosOS.serie}`);
+        exibirAviso(`Guia de ${motivo} gerada para o equipamento SN: ${dadosOS.serie}`);
         return novaRemessa;
     },
 
