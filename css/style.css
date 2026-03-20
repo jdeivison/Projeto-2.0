@@ -249,6 +249,32 @@ section {
   margin: 0 25px 25px 25px;
 }
 
+/* Adicionado para alinhar o header das seções */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px; /* Adiciona espaço antes da tabela */
+}
+
+.section-header h2 {
+  margin: 0;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* Ajuste para o botão de filtro ativo */
+.btn-save.active {
+    background: linear-gradient(135deg, #1abc9c, #16a085);
+    box-shadow: 0 6px 15px rgba(22, 160, 133, 0.4);
+    transform: translateY(-2px);
+}
+
+
+
 /* MODIFICAÇÃO 2: Adicionei a classe .grid-form para colocar os itens lado a lado */
 .grid-form {
   display: grid;

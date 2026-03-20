@@ -338,14 +338,24 @@
           </section>
 
           <section id="remessa-section" style="display: none">
-            <h2>Garantia, Conserto e Remessas</h2>
+            <div class="section-header">
+                <h2>Garantia, Conserto e Remessas</h2>
+                <div class="filter-buttons">
+                    <button class="btn-save" onclick="filtrarRemessas(this, 'Todos')">Todos</button>
+                    <button class="btn-save" onclick="filtrarRemessas(this, 'Aguardando Envio')">Aguardando</button>
+                    <button class="btn-save" onclick="filtrarRemessas(this, 'Em Trânsito')">Em Trânsito</button>
+                    <button class="btn-save" onclick="filtrarRemessas(this, 'Concluído')">Concluídos</button>
+                </div>
+            </div>
             <table class="data-table">
               <thead>
                 <tr>
                   <th>Item/SN</th>
+                  <th>Qtd</th>
                   <th>Motivo</th>
                   <th>Status</th>
                   <th>Data</th>
+                  <th>Ações</th>
                 </tr>
               </thead>
               <tbody id="corpo-remessas"></tbody>
@@ -378,5 +388,8 @@
     </div>
 
     <script src="js/os.js"></script>
+    <script src="js/estoque.js"></script>
+    <script src="js/financeiro.js"></script>
+    <script src="js/garantia.js"></script>
   </body>
 </html>

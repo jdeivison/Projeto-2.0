@@ -1,3 +1,22 @@
+function filtrarRemessas(buttonElement, filtro) {
+    const buttons = document.querySelectorAll('.filter-buttons .btn-save');
+    buttons.forEach(button => {
+        button.classList.remove('active');
+    });
+    buttonElement.classList.add('active');
+
+    // Lógica de filtragem da tabela
+    console.log(`Filtrando remessas por: ${filtro}`);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Ativa o primeiro botão de filtro da seção de remessas ao carregar a página
+    const firstFilterButton = document.querySelector('#remessa-section .filter-buttons .btn-save');
+    if (firstFilterButton) {
+        firstFilterButton.classList.add('active');
+    }
+});
+
 // --- Funções do Modal de Aviso ---
 function exibirAviso(mensagem) {
     document.getElementById('modal-aviso-mensagem').innerText = mensagem;

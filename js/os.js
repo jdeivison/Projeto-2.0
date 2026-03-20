@@ -226,6 +226,73 @@ function renderizarFinanceiro() {
     .join("");
 }
 
+let filtroAtualRemessas = 'Todos';
+
+function renderizarRemessas(filtro = 'Todos') {
+  filtroAtualRemessas = filtro;
+  const lista = JSON.parse(localStorage.getItem("remessas")) || [];
+  const corpo = document.getElementById("corpo-remessas");
+
+  const listaFiltrada = filtro === 'Todos' ? lista : lista.filter(r => r.status === filtro);
+
+  corpo.innerHTML = listaFiltrada.map((r, index) => {
+      const originalIndex = lista.findIndex(original => original.item === r.item && original.data === r.data && original.status === r.status);
+
+      let acoes = '';
+      if (r.status === 'Aguardando Envio') {
+          acoes = `<button class="btn-save" onclick="atualizarStatusRemessa(${originalIndex}, 'Em Trânsito')">Enviar</button>`;
+      } else if (r.status === 'Em Trânsito') {
+          acoes = `<button class="btn-save" onclick="atualizarStatusRemessa(${originalIndex}, 'Concluído')">Receber</button>`;
+      } else {
+          acoes = '<span>Finalizado</span>';
+      }
+
+      return `<tr>
+                  <td>${r.item}</td>
+                  <td>${r.qtd}</td>
+                  <td><span class="badge">${r.motivo}</span></td>
+                  <td>${r.status}</td>
+                  <td>${r.data}</td>
+                  <td>${acoes}</td>
+              </tr>`;
+      }).join("");
+}
+
+function filtrarRemessas(filtro) {
+    renderizarRemessas(filtro);
+}
+
+function atualizarStatusRemessa(index, novoStatus) {
+    let remessas = JSON.parse(localStorage.getItem("remessas")) || [];
+    const remessa = remessas[index];
+
+    if (!remessa) return;
+
+    remessa.status = novoStatus;
+
+    if (novoStatus === 'Concluído') {
+        const devolver = confirm(`O item "${remessa.item}" retornou. Deseja adicioná-lo de volta ao estoque?`);
+        if (devolver) {
+            let estoque = JSON.parse(localStorage.getItem("estoque")) || [];
+            const itemEstoque = estoque.find(e => e.nome.toLowerCase() === remessa.item.toLowerCase());
+            if (itemEstoque) {
+                itemEstoque.qtd += remessa.qtd;
+            } else {
+                estoque.push({ nome: remessa.item, qtd: remessa.qtd, custo: 0, data: new Date().toLocaleDateString() });
+            }
+            localStorage.setItem("estoque", JSON.stringify(estoque));
+            exibirAviso(`${remessa.qtd} unidade(s) de "${remessa.item}" retornaram ao estoque.`);
+            if(document.getElementById('estoque-section').style.display !== 'none') {
+                renderizarEstoque();
+            }
+        }
+    }
+
+    localStorage.setItem("remessas", JSON.stringify(remessas));
+    renderizarRemessas(filtroAtualRemessas);
+    atualizarDashboard();
+}
+
 function gerarRemessaManual(item) {
   const motivo = prompt(
     "Motivo (Garantia, Conserto ou Devolução):",
@@ -238,20 +305,11 @@ function gerarRemessaManual(item) {
     motivo,
     status: "Em Trânsito",
     data: new Date().toLocaleDateString(),
+    qtd: 1 // Adicionando qtd para consistencia
   });
   localStorage.setItem("remessas", JSON.stringify(remessas));
   renderizarRemessas();
   atualizarDashboard();
-}
-
-function renderizarRemessas() {
-  const lista = JSON.parse(localStorage.getItem("remessas")) || [];
-  document.getElementById("corpo-remessas").innerHTML = lista
-    .map(
-      (r) =>
-        `<tr><td>${r.item}</td><td><span class="badge">${r.motivo}</span></td><td>${r.status}</td><td>${r.data}</td></tr>`,
-    )
-    .join("");
 }
 
 function converterEmVenda() {
