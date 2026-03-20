@@ -55,6 +55,10 @@ function showSection(sectionId) {
     .querySelectorAll("main > section")
     .forEach((s) => (s.style.display = "none"));
   document.getElementById(sectionId).style.display = "block";
+
+  // Salva a última seção ativa no localStorage
+  localStorage.setItem('last_active_section', sectionId);
+
   if (sectionId === "financeiro-section") renderizarFinanceiro();
   if (sectionId === "estoque-section") renderizarEstoque();
   if (sectionId === "remessa-section") renderizarRemessas();
@@ -221,7 +225,13 @@ function renderizarFinanceiro() {
   document.getElementById("corpo-financeiro").innerHTML = lista
     .map(
       (f) =>
-        `<tr><td>${f.desc}</td><td style="color:${f.tipo === "Entrada" ? "#2ecc71" : "#e74c3c"}">R$ ${f.valor.toFixed(2)}</td><td>${f.tipo}</td><td>${f.data}</td></tr>`,
+        `<tr>
+          <td>${f.data}</td>
+          <td>${f.desc}</td>
+          <td class="${f.tipo === "Entrada" ? "valor-entrada" : "valor-saida"}">R$ ${f.valor.toFixed(2)}</td>
+          <td>${f.tipo}</td>
+          <td>${f.tipo === "Entrada" ? "Pago" : "A pagar"}</td>
+        </tr>`,
     )
     .join("");
 }
@@ -338,10 +348,12 @@ window.onload = () => {
   const salvos = JSON.parse(localStorage.getItem("meu_sistema_os")) || [];
   bancoDadosFake.historicoServicos = [...salvos];
 
-  // Adicione isso para as tabelas carregarem sozinhas ao abrir o site:
-  renderizarEstoque();
-  renderizarFinanceiro();
-  renderizarRemessas();
-
+  // Recupera e exibe a última seção salva, ou a padrão
+  const lastSection = localStorage.getItem('last_active_section') || 'os-section';
+  showSection(lastSection);
+  
+  // As funções de renderização já são chamadas dentro de showSection, 
+  // então não é mais necessário chamá-las diretamente aqui.
+  // Apenas o dashboard precisa de uma atualização inicial.
   atualizarDashboard();
 };

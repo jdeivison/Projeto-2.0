@@ -450,9 +450,21 @@ section {
   border-radius: 0 10px 10px 0;
 }
 
+/* Classes para cores de valores na tabela financeira */
+.valor-entrada {
+  color: #27ae60; /* Verde mais escuro para melhor contraste */
+  font-weight: bold;
+}
+
+.valor-saida {
+  color: #c0392b; /* Vermelho mais escuro para melhor contraste */
+  font-weight: bold;
+}
+
 /* estilo do input do financeiro */
 .input-box {
   padding: 12px;
   border-radius: 10px;
   border: 2px solid var(--border);
+  width: 100%;
 }
