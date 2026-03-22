@@ -423,6 +423,11 @@ section {
   box-shadow: 0 20px 50px var(--shadow);
 }
 
+#modal-lista-os .modal-content {
+  width: 80%;
+  max-width: 900px;
+}
+
 /* Cabeçalho do Modal */
 /* 1. Garante que o cabeçalho jogue os itens para as pontas e os alinhe verticalmente */
 .modal-header {
