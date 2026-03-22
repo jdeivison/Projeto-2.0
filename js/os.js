@@ -110,6 +110,47 @@ function buscarHistorico(tipo) {
 function fecharModal() {
   document.getElementById("modal-busca").style.display = "none";
 }
+
+function abrirModalListaOS() {
+  const modal = document.getElementById("modal-lista-os");
+  const conteudo = document.getElementById("lista-os-content");
+  const ordens = JSON.parse(localStorage.getItem("meu_sistema_os")) || [];
+
+  if (ordens.length === 0) {
+    conteudo.innerHTML = "<p>Nenhuma Ordem de Serviço encontrada.</p>";
+  } else {
+    let tabelaHTML = `<table class="data-table">
+      <thead>
+        <tr>
+          <th>Marca</th>
+          <th>Modelo</th>
+          <th>N° de Série</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody>`;
+    
+    ordens.forEach(os => {
+      tabelaHTML += `
+        <tr>
+          <td>${os.marca}</td>
+          <td>${os.modelo}</td>
+          <td>${os.serie}</td>
+          <td>${os.dataCadastro}</td>
+        </tr>`;
+    });
+
+    tabelaHTML += '</tbody></table>';
+    conteudo.innerHTML = tabelaHTML;
+  }
+
+  modal.style.display = "block";
+}
+
+function fecharModalListaOS() {
+  document.getElementById("modal-lista-os").style.display = "none";
+}
+
 function filtrarBusca() {
   const termo = document
     .getElementById("input-busca-modal")

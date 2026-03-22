@@ -45,7 +45,7 @@
 
         <main id="content">
           <div class="dashboard-cards">
-            <div class="card-kpi blue">
+            <div class="card-kpi blue" onclick="abrirModalListaOS()">
               <div class="kpi-icon">📋</div>
               <div class="kpi-content">
                 <span class="kpi-label">Ordens de Serviço</span>
@@ -403,6 +403,16 @@
             </table>
           </section>
         </main>
+      </div>
+    </div>
+
+    <div id="modal-lista-os" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Ordens de Serviço</h3>
+          <span class="close" onclick="fecharModalListaOS()">&times;</span>
+        </div>
+        <div id="lista-os-content"></div>
       </div>
     </div>
 
