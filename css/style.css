@@ -471,6 +471,11 @@ section {
   overflow-y: auto;
 }
 
+#lista-os-content {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
 #lista-resultados li {
   padding: 15px 20px;
   background: var(--input-bg);
