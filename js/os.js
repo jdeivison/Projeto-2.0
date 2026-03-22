@@ -123,6 +123,7 @@ function abrirModalListaOS() {
     let tabelaHTML = `<table class="data-table">
       <thead>
         <tr>
+          <th>Selecionar</th>
           <th>Marca</th>
           <th>Modelo</th>
           <th>N° de Série</th>
@@ -135,6 +136,7 @@ function abrirModalListaOS() {
     ordens.forEach((os, index) => {
       tabelaHTML += `
         <tr>
+          <td><input type="checkbox" class="os-checkbox" value="${index}" onchange="atualizarBotaoVenda()"></td>
           <td>${os.marca}</td>
           <td>${os.modelo}</td>
           <td>${os.serie}</td>
@@ -151,6 +153,7 @@ function abrirModalListaOS() {
   }
 
   modal.style.display = "block";
+  atualizarBotaoVenda(); // Garante que o botão esteja no estado correto ao abrir o modal
 }
 
 function fecharModalListaOS() {
@@ -516,23 +519,37 @@ function gerarRemessaManual(item) {
   atualizarDashboard();
 }
 
-function converterEmVenda() {
-  const dados = {
-    marca: document.getElementById("marca").value,
-    modelo: document.getElementById("modelo").value,
-    serie: document.getElementById("serie").value,
-    lacre: document.getElementById("lacre").value,
-    etiqueta: document.getElementById("etiqueta").value,
-    inventario: document.getElementById("inventario").value,
-    cliente: document.getElementById("documento-cliente").value,
-  };
-  if (!dados.serie) return exibirAviso("Selecione um equipamento!");
+function atualizarBotaoVenda() {
+  const checkboxes = document.querySelectorAll('.os-checkbox:checked');
+  const btnVenda = document.getElementById('btn-venda-modal');
+  btnVenda.disabled = checkboxes.length === 0;
+}
+
+function converterEmVendaModal() {
+  const checkboxes = document.querySelectorAll('.os-checkbox:checked');
+  if (checkboxes.length === 0) {
+    return exibirAviso("Selecione pelo menos uma Ordem de Serviço.");
+  }
+  
+  // Por enquanto, vamos lidar com a venda de uma OS por vez
+  if (checkboxes.length > 1) {
+    return exibirAviso("Por favor, selecione apenas uma OS para vender/imprimir.");
+  }
+
+  const osIndex = checkboxes[0].value;
+  const ordens = JSON.parse(localStorage.getItem("meu_sistema_os")) || [];
+  const os = ordens[osIndex];
+
+  if (!os) return exibirAviso("Ordem de Serviço não encontrada!");
+
   const valor = parseFloat(prompt("Valor da Venda:"));
-  if (isNaN(valor)) return;
-  salvarNoFinanceiro(`Venda SN: ${dados.serie}`, valor, "Entrada");
+  if (isNaN(valor) || valor <= 0) return;
+
+  salvarNoFinanceiro(`Venda SN: ${os.serie}`, valor, "Entrada");
+
   const win = window.open("", "", "height=600,width=800");
   win.document.write(
-    `<html><body style="font-family:sans-serif; padding:40px;"><h1>NOTA DE VENDA</h1><p>Cliente: ${dados.cliente}</p><p>Valor: R$ ${valor.toFixed(2)}</p><hr><h2>VERSO (EQUIPAMENTO)</h2><p>Marca: ${dados.marca} | Série: ${dados.serie}</p><p>Lacre: ${dados.lacre} | Etiqueta: ${dados.etiqueta}</p><script>window.print();</script></body></html>`,
+    `<html><body style="font-family:sans-serif; padding:40px;"><h1>NOTA DE VENDA</h1><p>Cliente: ${os.documento}</p><p>Valor: R$ ${valor.toFixed(2)}</p><hr><h2>VERSO (EQUIPAMENTO)</h2><p>Marca: ${os.marca} | Série: ${os.serie}</p><p>Lacre: ${os.lacre} | Etiqueta: ${os.etiqueta}</p><script>window.print();</script></body></html>`,
   );
   win.document.close();
 }

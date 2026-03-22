@@ -180,14 +180,7 @@
 
 
               <div class="actions">
-                <button
-                  type="button"
-                  id="btn-venda"
-                  class="btn"
-                  onclick="converterEmVenda()"
-                >
-                  🛒 Venda / Imprimir
-                </button>
+
                 <button type="submit" class="btn btn-save">💾 Salvar OS</button>
               </div>
             </form>
@@ -418,6 +411,17 @@
           <span class="close" onclick="fecharModalListaOS()">&times;</span>
         </div>
         <div id="lista-os-content"></div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            id="btn-venda-modal"
+            class="btn"
+            onclick="converterEmVendaModal()"
+            disabled
+          >
+            🛒 Venda / Imprimir
+          </button>
+        </div>
       </div>
     </div>
 
