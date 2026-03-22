@@ -525,25 +525,25 @@ function atualizarBotaoVenda() {
   btnVenda.disabled = checkboxes.length === 0;
 }
 
-function converterEmVendaModal() {
-  const checkboxes = document.querySelectorAll('.os-checkbox:checked');
-  if (checkboxes.length === 0) {
-    return exibirAviso("Selecione pelo menos uma Ordem de Serviço.");
-  }
-  
-  // Por enquanto, vamos lidar com a venda de uma OS por vez
-  if (checkboxes.length > 1) {
-    return exibirAviso("Por favor, selecione apenas uma OS para vender/imprimir.");
+let osParaVendaIndex = null;
+
+function fecharModalVenda() {
+  document.getElementById('modal-valor-venda').style.display = 'none';
+}
+
+function confirmarVenda() {
+  const valor = parseFloat(document.getElementById('input-valor-venda').value);
+  if (isNaN(valor) || valor <= 0) {
+    return exibirAviso("Por favor, insira um valor de venda válido.");
   }
 
-  const osIndex = checkboxes[0].value;
   const ordens = JSON.parse(localStorage.getItem("meu_sistema_os")) || [];
-  const os = ordens[osIndex];
+  const os = ordens[osParaVendaIndex];
 
-  if (!os) return exibirAviso("Ordem de Serviço não encontrada!");
-
-  const valor = parseFloat(prompt("Valor da Venda:"));
-  if (isNaN(valor) || valor <= 0) return;
+  if (!os) {
+    fecharModalVenda();
+    return exibirAviso("Ordem de Serviço não encontrada!");
+  }
 
   salvarNoFinanceiro(`Venda SN: ${os.serie}`, valor, "Entrada");
 
@@ -552,6 +552,23 @@ function converterEmVendaModal() {
     `<html><body style="font-family:sans-serif; padding:40px;"><h1>NOTA DE VENDA</h1><p>Cliente: ${os.documento}</p><p>Valor: R$ ${valor.toFixed(2)}</p><hr><h2>VERSO (EQUIPAMENTO)</h2><p>Marca: ${os.marca} | Série: ${os.serie}</p><p>Lacre: ${os.lacre} | Etiqueta: ${os.etiqueta}</p><script>window.print();</script></body></html>`,
   );
   win.document.close();
+  
+  fecharModalVenda();
+  document.getElementById('input-valor-venda').value = ''; // Limpa o input
+}
+
+function converterEmVendaModal() {
+  const checkboxes = document.querySelectorAll('.os-checkbox:checked');
+  if (checkboxes.length === 0) {
+    return exibirAviso("Selecione pelo menos uma Ordem de Serviço.");
+  }
+  
+  if (checkboxes.length > 1) {
+    return exibirAviso("Por favor, selecione apenas uma OS para vender/imprimir.");
+  }
+
+  osParaVendaIndex = checkboxes[0].value;
+  document.getElementById('modal-valor-venda').style.display = 'block';
 }
 
 window.onload = () => {

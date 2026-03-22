@@ -394,10 +394,16 @@ section {
 
 .btn-save:hover,
 #btn-venda:hover,
+.btn-success:hover,
 .btn-cancel:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
   filter: brightness(1.1);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    box-shadow: 0 6px 15px rgba(46, 204, 113, 0.3);
 }
 
 /* MODAL CARDS */
