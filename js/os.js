@@ -104,7 +104,11 @@ function buscarHistorico(tipo) {
   } else {
     itensUnicos.forEach(item => {
       const li = document.createElement("li");
-      li.innerHTML = `<strong>Marca:</strong> ${item.marca || "N/A"}<br><strong>Modelo:</strong> ${item.modelo || "N/A"}`;
+            li.innerHTML = `
+        <div class="search-result-item">
+          <span class="search-result-main">${item.marca || "N/A"} - ${item.modelo || "N/A"}</span>
+          <span class="search-result-qty">Qtd: ${item.qtd || 0}</span>
+        </div>`;
       li.onclick = () => {
         // Preenche ambos os campos ao selecionar
         document.getElementById("marca").value = item.marca || "";

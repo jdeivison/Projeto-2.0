@@ -487,13 +487,11 @@ section {
 }
 
 #lista-resultados li {
-  padding: 15px 20px;
+  padding: 10px 15px; /* Reduced padding */
   background: var(--input-bg);
-  margin-bottom: 10px;
+  margin-bottom: 8px; /* Reduced margin */
   border-radius: 12px;
   cursor: pointer;
-  font-weight: 600;
-  color: var(--text-main);
   transition: all 0.2s ease;
   border: 1px solid transparent;
 }
@@ -502,8 +500,33 @@ section {
 #lista-resultados li:hover {
   background: var(--card-bg);
   border-color: var(--primary);
-  color: var(--primary);
-  transform: translateX(10px); /* Pequeno deslize para a direita */
+  transform: translateX(5px); /* Reduced transform */
+}
+
+/* New styles for the search result item layout */
+.search-result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.search-result-main {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+#lista-resultados li:hover .search-result-main {
+    color: var(--primary); /* Match text color on hover */
+}
+
+.search-result-qty {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-sub);
+  background: var(--bg-color);
+  padding: 4px 8px;
+  border-radius: 8px;
 }
 /* TABELAS */
 .data-table {
