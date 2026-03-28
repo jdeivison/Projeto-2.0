@@ -70,15 +70,18 @@ function showSection(sectionId) {
 }
 
 let tipoBuscaAtivo = "";
-function buscarHistorico(tipo) { // O 'tipo' é mantido para consistência, mas a lógica é unificada
+function buscarHistorico(tipo) {
   tipoBuscaAtivo = tipo;
   const modal = document.getElementById("modal-busca");
   const lista = document.getElementById("lista-resultados");
   const tituloModal = document.getElementById("modal-titulo");
   const estoque = JSON.parse(localStorage.getItem("estoque")) || [];
 
-  tituloModal.innerText = "Buscar Item no Estoque";
-  lista.innerHTML = ""; // Limpa resultados anteriores
+  // Pega os valores atuais dos campos para usar como filtro
+  const nomePecaAtual = document.getElementById("peca-produto").value;
+  const marcaAtual = document.getElementById("marca").value;
+
+  lista.innerHTML = ""; // Limpa a lista
 
   if (estoque.length === 0) {
     lista.innerHTML = "<li>Nenhum item encontrado no estoque.</li>";
@@ -86,35 +89,94 @@ function buscarHistorico(tipo) { // O 'tipo' é mantido para consistência, mas 
     return;
   }
 
-  const itensUnicos = new Map();
+  // 'peca': Ponto de entrada, mostra todos os produtos únicos
+  if (tipo === 'peca') {
+    tituloModal.innerText = "Buscar Peça / Produto";
+    const itensUnicos = new Map();
 
-  // Garante unicidade pelo nome do produto, mas guarda o item inteiro
-  estoque.forEach(item => {
-    if (item.nome && !itensUnicos.has(item.nome.toLowerCase())) {
-      itensUnicos.set(item.nome.toLowerCase(), item);
-    }
-  });
-
-  if (itensUnicos.size === 0) {
-    lista.innerHTML = `<li>Nenhum produto com nome definido encontrado.</li>`;
-  } else {
-    itensUnicos.forEach(item => {
-      const li = document.createElement("li");
-      // Exibe nome, marca e quantidade para dar mais contexto
-      li.innerHTML = `
-        <div class="search-result-item">
-          <span class="search-result-main">${item.nome} (${item.marca || 'N/A'})</span>
-          <span class="search-result-qty">Qtd: ${item.qtd || 0}</span>
-        </div>`;
-      li.onclick = () => {
-        // Preenche todos os campos relacionados ao selecionar
-        document.getElementById("peca-produto").value = item.nome || "";
-        document.getElementById("marca").value = item.marca || "";
-        document.getElementById("modelo").value = item.modelo || "";
-        fecharModal();
-      };
-      lista.appendChild(li);
+    estoque.forEach(item => {
+      if (item.nome && !itensUnicos.has(item.nome.toLowerCase())) {
+        itensUnicos.set(item.nome.toLowerCase(), item);
+      }
     });
+
+    if (itensUnicos.size === 0) {
+      lista.innerHTML = `<li>Nenhum produto encontrado.</li>`;
+    } else {
+      itensUnicos.forEach(item => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <div class="search-result-item">
+            <span class="search-result-main">${item.nome}</span>
+            <span class="search-result-qty">Qtd: ${item.qtd || 0}</span>
+          </div>`;
+        li.onclick = () => {
+          document.getElementById("peca-produto").value = item.nome || "";
+          document.getElementById("marca").value = item.marca || "";
+          document.getElementById("modelo").value = item.modelo || "";
+          fecharModal();
+        };
+        lista.appendChild(li);
+      });
+    }
+  } 
+  // 'marca': Filtra por peça, se houver
+  else if (tipo === 'marca') {
+    tituloModal.innerText = `Marcas para "${nomePecaAtual || 'Todos os produtos'}"`;
+    const marcasUnicas = new Set();
+    
+    const estoqueFiltrado = nomePecaAtual 
+      ? estoque.filter(item => item.nome === nomePecaAtual)
+      : estoque;
+
+    estoqueFiltrado.forEach(item => {
+      if (item.marca) marcasUnicas.add(item.marca);
+    });
+
+    if (marcasUnicas.size === 0) {
+      lista.innerHTML = `<li>Nenhuma marca encontrada.</li>`;
+    } else {
+      marcasUnicas.forEach(marca => {
+        const li = document.createElement("li");
+        li.innerText = marca;
+        li.onclick = () => {
+          document.getElementById("marca").value = marca;
+          fecharModal();
+        };
+        lista.appendChild(li);
+      });
+    }
+  }
+  // 'modelo': Filtra por peça e marca, se houver
+  else if (tipo === 'modelo') {
+    tituloModal.innerText = `Modelos para "${marcaAtual || 'Todas as marcas'}"`;
+    const modelosUnicos = new Set();
+
+    let estoqueFiltrado = estoque;
+    if (nomePecaAtual) {
+      estoqueFiltrado = estoqueFiltrado.filter(item => item.nome === nomePecaAtual);
+    }
+    if (marcaAtual) {
+      estoqueFiltrado = estoqueFiltrado.filter(item => item.marca === marcaAtual);
+    }
+
+    estoqueFiltrado.forEach(item => {
+      if (item.modelo) modelosUnicos.add(item.modelo);
+    });
+
+    if (modelosUnicos.size === 0) {
+      lista.innerHTML = `<li>Nenhum modelo encontrado.</li>`;
+    } else {
+      modelosUnicos.forEach(modelo => {
+        const li = document.createElement("li");
+        li.innerText = modelo;
+        li.onclick = () => {
+          document.getElementById("modelo").value = modelo;
+          fecharModal();
+        };
+        lista.appendChild(li);
+      });
+    }
   }
 
   modal.style.display = "block";
