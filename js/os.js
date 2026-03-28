@@ -70,40 +70,14 @@ function showSection(sectionId) {
 }
 
 let tipoBuscaAtivo = "";
-function buscarHistorico(tipo) {
+function buscarHistorico(tipo) { // O 'tipo' é mantido para consistência, mas a lógica é unificada
   tipoBuscaAtivo = tipo;
   const modal = document.getElementById("modal-busca");
   const lista = document.getElementById("lista-resultados");
   const tituloModal = document.getElementById("modal-titulo");
   const estoque = JSON.parse(localStorage.getItem("estoque")) || [];
 
-  let itensUnicos = new Set();
-  let titulo = "";
-  let campoId = "";
-  let propriedade = "";
-
-  // Configurações baseadas no tipo de busca
-  switch (tipo) {
-    case 'peca':
-      titulo = "Buscar Peça / Produto";
-      campoId = "peca-produto";
-      propriedade = "nome";
-      break;
-    case 'marca':
-      titulo = "Buscar Marca";
-      campoId = "marca";
-      propriedade = "marca";
-      break;
-    case 'modelo':
-      titulo = "Buscar Modelo";
-      campoId = "modelo";
-      propriedade = "modelo";
-      break;
-    default:
-      return; // Tipo de busca não conhecido
-  }
-
-  tituloModal.innerText = titulo;
+  tituloModal.innerText = "Buscar Item no Estoque";
   lista.innerHTML = ""; // Limpa resultados anteriores
 
   if (estoque.length === 0) {
@@ -112,21 +86,31 @@ function buscarHistorico(tipo) {
     return;
   }
 
-  // Coleta itens únicos para a propriedade específica
+  const itensUnicos = new Map();
+
+  // Garante unicidade pelo nome do produto, mas guarda o item inteiro
   estoque.forEach(item => {
-    if (item[propriedade]) {
-      itensUnicos.add(item[propriedade]);
+    if (item.nome && !itensUnicos.has(item.nome.toLowerCase())) {
+      itensUnicos.set(item.nome.toLowerCase(), item);
     }
   });
 
   if (itensUnicos.size === 0) {
-    lista.innerHTML = `<li>Nenhum(a) ${propriedade} encontrado(a).</li>`;
+    lista.innerHTML = `<li>Nenhum produto com nome definido encontrado.</li>`;
   } else {
-    itensUnicos.forEach(valor => {
+    itensUnicos.forEach(item => {
       const li = document.createElement("li");
-      li.innerText = valor;
+      // Exibe nome, marca e quantidade para dar mais contexto
+      li.innerHTML = `
+        <div class="search-result-item">
+          <span class="search-result-main">${item.nome} (${item.marca || 'N/A'})</span>
+          <span class="search-result-qty">Qtd: ${item.qtd || 0}</span>
+        </div>`;
       li.onclick = () => {
-        document.getElementById(campoId).value = valor;
+        // Preenche todos os campos relacionados ao selecionar
+        document.getElementById("peca-produto").value = item.nome || "";
+        document.getElementById("marca").value = item.marca || "";
+        document.getElementById("modelo").value = item.modelo || "";
         fecharModal();
       };
       lista.appendChild(li);
