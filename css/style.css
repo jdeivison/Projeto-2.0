@@ -653,3 +653,12 @@ section {
 .btn-acao-remessa:hover .icon-truck::before {
     filter: grayscale(0%); /* Devolve a cor original do emoji no hover (opcional) */
 }
+
+/* Container para tabelas com rolagem */
+.table-container {
+  max-height: 400px; /* Altura máxima antes de rolar */
+  overflow-y: auto;  /* Adiciona a barra de rolagem vertical quando necessário */
+  border: 1px solid var(--border); /* Borda sutil para o container */
+  border-radius: 12px; /* Cantos arredondados */
+  padding: 5px; /* Pequeno espaço interno */
+}
