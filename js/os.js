@@ -71,49 +71,62 @@ function showSection(sectionId) {
 
 let tipoBuscaAtivo = "";
 function buscarHistorico(tipo) {
-  tipoBuscaAtivo = tipo; // 'marca' ou 'modelo'
+  tipoBuscaAtivo = tipo;
   const modal = document.getElementById("modal-busca");
   const lista = document.getElementById("lista-resultados");
   const tituloModal = document.getElementById("modal-titulo");
-
-  tituloModal.innerText = "Buscar Produto no Estoque";
-  lista.innerHTML = ""; // Limpa resultados anteriores
-  
   const estoque = JSON.parse(localStorage.getItem("estoque")) || [];
+
+  let itensUnicos = new Set();
+  let titulo = "";
+  let campoId = "";
+  let propriedade = "";
+
+  // Configurações baseadas no tipo de busca
+  switch (tipo) {
+    case 'peca':
+      titulo = "Buscar Peça / Produto";
+      campoId = "peca-produto";
+      propriedade = "nome";
+      break;
+    case 'marca':
+      titulo = "Buscar Marca";
+      campoId = "marca";
+      propriedade = "marca";
+      break;
+    case 'modelo':
+      titulo = "Buscar Modelo";
+      campoId = "modelo";
+      propriedade = "modelo";
+      break;
+    default:
+      return; // Tipo de busca não conhecido
+  }
+
+  tituloModal.innerText = titulo;
+  lista.innerHTML = ""; // Limpa resultados anteriores
 
   if (estoque.length === 0) {
     lista.innerHTML = "<li>Nenhum item encontrado no estoque.</li>";
     modal.style.display = "block";
     return;
   }
-  
-  // Usar um Set para garantir itens únicos baseados na combinação marca/modelo
-  const itensUnicos = new Map();
+
+  // Coleta itens únicos para a propriedade específica
   estoque.forEach(item => {
-    if (item.marca || item.modelo) {
-      const chave = `${item.marca}|${item.modelo}`;
-      if (!itensUnicos.has(chave)) {
-        itensUnicos.set(chave, item);
-      }
+    if (item[propriedade]) {
+      itensUnicos.add(item[propriedade]);
     }
   });
 
-
   if (itensUnicos.size === 0) {
-    lista.innerHTML = "<li>Nenhum item com marca/modelo encontrado.</li>";
+    lista.innerHTML = `<li>Nenhum(a) ${propriedade} encontrado(a).</li>`;
   } else {
-    itensUnicos.forEach(item => {
+    itensUnicos.forEach(valor => {
       const li = document.createElement("li");
-            li.innerHTML = `
-        <div class="search-result-item">
-          <span class="search-result-main">${item.marca || "N/A"} - ${item.modelo || "N/A"}</span>
-          <span class="search-result-qty">Qtd: ${item.qtd || 0}</span>
-        </div>`;
+      li.innerText = valor;
       li.onclick = () => {
-        // Preenche os campos ao selecionar
-        document.getElementById("peca-produto").value = item.nome || "";
-        document.getElementById("marca").value = item.marca || "";
-        document.getElementById("modelo").value = item.modelo || "";
+        document.getElementById(campoId).value = valor;
         fecharModal();
       };
       lista.appendChild(li);
@@ -121,8 +134,8 @@ function buscarHistorico(tipo) {
   }
 
   modal.style.display = "block";
-  document.getElementById("input-busca-modal").value = ""; // Limpa o filtro
-  filtrarBusca(); // Aplica o filtro (que não vai filtrar nada, mostrando tudo)
+  document.getElementById("input-busca-modal").value = "";
+  filtrarBusca();
 }
 
 function fecharModal() {
