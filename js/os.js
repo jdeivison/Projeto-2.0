@@ -211,13 +211,18 @@ function abrirModalListaOS() {
   if (ordens.length === 0) {
     conteudo.innerHTML = "<p>Nenhuma Ordem de Serviço encontrada.</p>";
   } else {
-    let tabelaHTML = `<table class="data-table">
+    let tabelaHTML = `<div style="overflow-x: auto;"><table class="data-table">
       <thead>
         <tr>
           <th>Selecionar</th>
+          <th>Produto</th>
           <th>Marca</th>
           <th>Modelo</th>
-          <th>N° de Série</th>
+          <th>N° Série</th>
+          <th>Cliente</th>
+          <th>Lacre</th>
+          <th>Etiqueta</th>
+          <th>Inventário</th>
           <th>Data</th>
           <th>Ações</th>
         </tr>
@@ -228,10 +233,15 @@ function abrirModalListaOS() {
       tabelaHTML += `
         <tr>
           <td><input type="checkbox" class="os-checkbox" value="${index}" onchange="atualizarBotaoVenda()"></td>
-          <td>${os.marca}</td>
-          <td>${os.modelo}</td>
-          <td>${os.serie}</td>
-          <td>${os.dataCadastro}</td>
+          <td>${os.pecaProduto || ''}</td>
+          <td>${os.marca || ''}</td>
+          <td>${os.modelo || ''}</td>
+          <td>${os.serie || ''}</td>
+          <td>${os.documento || ''}</td>
+          <td>${os.lacre || ''}</td>
+          <td>${os.etiqueta || ''}</td>
+          <td>${os.inventario || ''}</td>
+          <td>${os.dataCadastro || ''}</td>
           <td>
             <button class="btn-acao btn-edit" onclick="editarOS(${index})">✏️</button>
             <button class="btn-acao btn-delete" onclick="excluirOS(${index})">🗑️</button>
@@ -239,7 +249,7 @@ function abrirModalListaOS() {
         </tr>`;
     });
 
-    tabelaHTML += '</tbody></table>';
+    tabelaHTML += '</tbody></table></div>';
     conteudo.innerHTML = tabelaHTML;
   }
 
@@ -259,6 +269,7 @@ function editarOS(index) {
   osEmEdicao = index; // Define o índice da OS que está sendo editada
 
   // Preenche o formulário com os dados da OS
+  document.getElementById("peca-produto").value = os.pecaProduto || "";
   document.getElementById("marca").value = os.marca;
   document.getElementById("modelo").value = os.modelo;
   document.getElementById("serie").value = os.serie;
@@ -311,6 +322,7 @@ function filtrarBusca() {
 function salvarOS(event) {
   event.preventDefault();
   const osData = {
+    pecaProduto: document.getElementById("peca-produto").value,
     marca: document.getElementById("marca").value,
     modelo: document.getElementById("modelo").value,
     serie: document.getElementById("serie").value,
