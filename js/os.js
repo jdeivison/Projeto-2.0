@@ -77,11 +77,10 @@ function buscarHistorico(tipo) {
   const tituloModal = document.getElementById("modal-titulo");
   const estoque = JSON.parse(localStorage.getItem("estoque")) || [];
 
-  // Pega os valores atuais dos campos para usar como filtro
   const nomePecaAtual = document.getElementById("peca-produto").value;
   const marcaAtual = document.getElementById("marca").value;
 
-  lista.innerHTML = ""; // Limpa a lista
+  lista.innerHTML = "";
 
   if (estoque.length === 0) {
     lista.innerHTML = "<li>Nenhum item encontrado no estoque.</li>";
@@ -89,68 +88,76 @@ function buscarHistorico(tipo) {
     return;
   }
 
-  // 'peca': Ponto de entrada, mostra todos os produtos únicos
+  // 'peca': Mostra produtos únicos com quantidade somada.
   if (tipo === 'peca') {
     tituloModal.innerText = "Buscar Peça / Produto";
-    const itensUnicos = new Map();
+    const itensComQtd = new Map();
 
     estoque.forEach(item => {
-      if (item.nome && !itensUnicos.has(item.nome.toLowerCase())) {
-        itensUnicos.set(item.nome.toLowerCase(), item);
+      if (item.nome) {
+        const nomeKey = item.nome.toLowerCase();
+        const qtdAtual = itensComQtd.has(nomeKey) ? itensComQtd.get(nomeKey).qtd : 0;
+        itensComQtd.set(nomeKey, { nome: item.nome, qtd: qtdAtual + (item.qtd || 0) });
       }
     });
 
-    if (itensUnicos.size === 0) {
+    if (itensComQtd.size === 0) {
       lista.innerHTML = `<li>Nenhum produto encontrado.</li>`;
     } else {
-      itensUnicos.forEach(item => {
+      itensComQtd.forEach(item => {
         const li = document.createElement("li");
         li.innerHTML = `
           <div class="search-result-item">
             <span class="search-result-main">${item.nome}</span>
-            <span class="search-result-qty">Qtd: ${item.qtd || 0}</span>
+            <span class="search-result-qty">Qtd: ${item.qtd}</span>
           </div>`;
         li.onclick = () => {
-          document.getElementById("peca-produto").value = item.nome || "";
-          document.getElementById("marca").value = item.marca || "";
-          document.getElementById("modelo").value = item.modelo || "";
+          document.getElementById("peca-produto").value = item.nome;
           fecharModal();
         };
         lista.appendChild(li);
       });
     }
   } 
-  // 'marca': Filtra por peça, se houver
+  // 'marca': Filtra por peça, mostra marcas com quantidade somada.
   else if (tipo === 'marca') {
-    tituloModal.innerText = `Marcas para "${nomePecaAtual || 'Todos os produtos'}"`;
-    const marcasUnicas = new Set();
+    tituloModal.innerText = `Marcas para "${nomePecaAtual || 'Todos'}"`;
+    const marcasComQtd = new Map();
     
     const estoqueFiltrado = nomePecaAtual 
       ? estoque.filter(item => item.nome === nomePecaAtual)
       : estoque;
 
     estoqueFiltrado.forEach(item => {
-      if (item.marca) marcasUnicas.add(item.marca);
+      if (item.marca) {
+        const marcaKey = item.marca.toLowerCase();
+        const qtdAtual = marcasComQtd.has(marcaKey) ? marcasComQtd.get(marcaKey).qtd : 0;
+        marcasComQtd.set(marcaKey, { nome: item.marca, qtd: qtdAtual + (item.qtd || 0) });
+      }
     });
 
-    if (marcasUnicas.size === 0) {
+    if (marcasComQtd.size === 0) {
       lista.innerHTML = `<li>Nenhuma marca encontrada.</li>`;
     } else {
-      marcasUnicas.forEach(marca => {
+      marcasComQtd.forEach(item => {
         const li = document.createElement("li");
-        li.innerText = marca;
+        li.innerHTML = `
+          <div class="search-result-item">
+            <span class="search-result-main">${item.nome}</span>
+            <span class="search-result-qty">Qtd: ${item.qtd}</span>
+          </div>`;
         li.onclick = () => {
-          document.getElementById("marca").value = marca;
+          document.getElementById("marca").value = item.nome;
           fecharModal();
         };
         lista.appendChild(li);
       });
     }
   }
-  // 'modelo': Filtra por peça e marca, se houver
+  // 'modelo': Filtra por peça e marca, mostra modelos com quantidade somada.
   else if (tipo === 'modelo') {
-    tituloModal.innerText = `Modelos para "${marcaAtual || 'Todas as marcas'}"`;
-    const modelosUnicos = new Set();
+    tituloModal.innerText = `Modelos para "${nomePecaAtual} - ${marcaAtual || 'Todos'}"`;
+    const modelosComQtd = new Map();
 
     let estoqueFiltrado = estoque;
     if (nomePecaAtual) {
@@ -161,17 +168,25 @@ function buscarHistorico(tipo) {
     }
 
     estoqueFiltrado.forEach(item => {
-      if (item.modelo) modelosUnicos.add(item.modelo);
+      if (item.modelo) {
+        const modeloKey = item.modelo.toLowerCase();
+        const qtdAtual = modelosComQtd.has(modeloKey) ? modelosComQtd.get(modeloKey).qtd : 0;
+        modelosComQtd.set(modeloKey, { nome: item.modelo, qtd: qtdAtual + (item.qtd || 0) });
+      }
     });
 
-    if (modelosUnicos.size === 0) {
+    if (modelosComQtd.size === 0) {
       lista.innerHTML = `<li>Nenhum modelo encontrado.</li>`;
     } else {
-      modelosUnicos.forEach(modelo => {
+      modelosComQtd.forEach(item => {
         const li = document.createElement("li");
-        li.innerText = modelo;
+        li.innerHTML = `
+          <div class="search-result-item">
+            <span class="search-result-main">${item.nome}</span>
+            <span class="search-result-qty">Qtd: ${item.qtd}</span>
+          </div>`;
         li.onclick = () => {
-          document.getElementById("modelo").value = modelo;
+          document.getElementById("modelo").value = item.nome;
           fecharModal();
         };
         lista.appendChild(li);
