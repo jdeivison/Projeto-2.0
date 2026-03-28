@@ -85,6 +85,20 @@
             <form id="os-form" onsubmit="salvarOS(event)">
               <div class="grid-form">
                 <div class="input-group">
+                  <label>Peça / Produto</label>
+                  <div class="input-container">
+                    <input type="text" id="peca-produto" placeholder="Nome da peça ou produto" />
+                    <button
+                      type="button"
+                      class="btn-search"
+                      onclick="buscarHistorico('peca')"
+                    >
+                      🔍
+                    </button>
+                  </div>
+                </div>
+
+                <div class="input-group">
                   <label>Marca</label>
                   <div class="input-container">
                     <input type="text" id="marca" placeholder="Fabricante" />

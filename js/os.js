@@ -110,7 +110,8 @@ function buscarHistorico(tipo) {
           <span class="search-result-qty">Qtd: ${item.qtd || 0}</span>
         </div>`;
       li.onclick = () => {
-        // Preenche ambos os campos ao selecionar
+        // Preenche os campos ao selecionar
+        document.getElementById("peca-produto").value = item.nome || "";
         document.getElementById("marca").value = item.marca || "";
         document.getElementById("modelo").value = item.modelo || "";
         fecharModal();
