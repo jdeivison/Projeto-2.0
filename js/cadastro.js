@@ -1,3 +1,5 @@
+let clienteEmEdicao = null;
+
 // Função para lidar com o cadastro de novos clientes
 function cadastrarCliente(event) {
   // Previne o comportamento padrão de submissão do formulário, que recarregaria a página
@@ -22,8 +24,7 @@ function cadastrarCliente(event) {
   }
 
   // Cria um objeto para representar o novo cliente
-  const novoCliente = {
-    id: 'c' + Date.now(), // Gera um ID único para o cliente
+  const clienteData = {
     nome: nome,
     cpf: cpf,
     contato: contato,
@@ -33,23 +34,37 @@ function cadastrarCliente(event) {
     numero: numero,
     bairro: bairro,
     cidade: cidade,
-    dataCadastro: new Date().toLocaleDateString()
   };
 
   // Recupera a lista de clientes existentes do localStorage ou cria uma lista vazia
   const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
   
-  // Adiciona o novo cliente à lista
-  clientes.push(novoCliente);
+  if (clienteEmEdicao) {
+    // Atualiza o cliente existente
+    const index = clientes.findIndex(c => c.id === clienteEmEdicao);
+    if (index !== -1) {
+      clientes[index] = { ...clientes[index], ...clienteData };
+      exibirAviso(`Cliente "${nome}" atualizado com sucesso!`);
+    }
+  } else {
+    // Adiciona o novo cliente à lista
+    clienteData.id = 'c' + Date.now();
+    clienteData.dataCadastro = new Date().toLocaleDateString();
+    clientes.push(clienteData);
+    exibirAviso(`Cliente "${nome}" cadastrado com sucesso!`);
+  }
+
 
   // Salva a lista atualizada de volta no localStorage
   localStorage.setItem('clientes', JSON.stringify(clientes));
 
-  // Exibe uma mensagem de sucesso para o usuário
-  exibirAviso(`Cliente "${nome}" cadastrado com sucesso!`);
-
   // Limpa os campos do formulário para o próximo cadastro
   document.getElementById('cliente-form').reset();
+
+  // Reseta o estado de edição
+  clienteEmEdicao = null;
+  document.querySelector('#cliente-form .btn-save').innerText = '💾 Cadastrar';
+
 
   // Atualiza a tabela de clientes para exibir o novo registro
   renderizarTabelaClientes();
@@ -92,12 +107,28 @@ function renderizarTabelaClientes() {
 }
 
 /**
- * Edita um cliente (funcionalidade a ser implementada).
+ * Edita um cliente.
  * @param {string} id - O ID do cliente a ser editado.
  */
 function editarCliente(id) {
-  exibirAviso(`Funcionalidade de editar cliente (ID: ${id}) a ser implementada.`);
-  // Futuro: Implementar a lógica para preencher o formulário com os dados do cliente para edição.
+  const clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+  const cliente = clientes.find(c => c.id === id);
+
+  if (cliente) {
+    clienteEmEdicao = id;
+    document.getElementById('cliente-nome').value = cliente.nome;
+    document.getElementById('cliente-cpf').value = cliente.cpf;
+    document.getElementById('cliente-contato').value = cliente.contato;
+    document.getElementById('cliente-email').value = cliente.email;
+    document.getElementById('cliente-cep').value = cliente.cep;
+    document.getElementById('cliente-rua').value = cliente.rua;
+    document.getElementById('cliente-numero').value = cliente.numero;
+    document.getElementById('cliente-bairro').value = cliente.bairro;
+    document.getElementById('cliente-cidade').value = cliente.cidade;
+
+    document.querySelector('#cliente-form .btn-save').innerText = '💾 Atualizar';
+    document.getElementById('cliente-nome').focus();
+  }
 }
 
 /**
