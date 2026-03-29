@@ -78,7 +78,9 @@ function renderizarTabelaClientes() {
         <td>${cliente.cpf}</td>
         <td>${cliente.contato || '-'}</td>
         <td>${cliente.email || '-'}</td>
-        <td>${cliente.rua ? enderecoCompleto : '-'}</td>
+        <td class="td-endereco" title="${cliente.rua ? enderecoCompleto : ''}">
+          ${cliente.rua ? enderecoCompleto : '-'}
+        </td>
         <td>
           <button class="btn-acao btn-edit" onclick="editarCliente('${cliente.id}')">✏️</button>
           <button class="btn-acao btn-delete" onclick="excluirCliente('${cliente.id}')">🗑️</button>

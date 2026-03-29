@@ -712,3 +712,13 @@ section {
   background: var(--card-bg);
   border-bottom: 2px solid var(--border);
 }
+
+/* Estilo para truncar o endereço na tabela de clientes */
+.data-table td.td-endereco {
+  max-width: 250px; /* Ajuste a largura máxima conforme necessário */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left; /* Melhora a leitura de endereços */
+  cursor: help; /* Indica que há mais informações (no title) */
+}
