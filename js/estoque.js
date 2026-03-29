@@ -86,7 +86,7 @@ function renderizarEstoque() {
             <td>${i.qtd} un</td>
             <td>R$ ${parseFloat(i.custo).toFixed(2)}</td>
             <td>${i.data}</td>
-            <td>
+            <td class="actions-cell">
                 <button title="Editar" class="btn-acao btn-edit" onclick="editarEstoque(${index})">✏️</button>
                 <button title="Excluir" class="btn-acao btn-delete" onclick="excluirEstoque(${index})">🗑️</button>
             </td>

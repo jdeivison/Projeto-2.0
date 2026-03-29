@@ -592,7 +592,7 @@ section {
 }
 
 /* --- Botões de Ação nas Tabelas --- */
-#financeiro-section .data-table td:last-child {
+.actions-cell {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -601,15 +601,23 @@ section {
 
 .btn-acao {
     border: none;
-    border-radius: 8px;
-    padding: 6px 10px;
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
     cursor: pointer;
-    font-size: 1rem;
-    margin: 0; /* Margin é agora controlada pelo gap do flex container */
-    transition: transform 0.2s;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    line-height: 0;
 }
+
 .btn-acao:hover {
-    transform: scale(1.1);
+    transform: scale(1.15);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 .btn-edit {
     background: var(--warning);

@@ -244,7 +244,7 @@ function abrirModalListaOS() {
           <td>${os.etiqueta || ''}</td>
           <td>${os.inventario || ''}</td>
           <td>${os.dataCadastro || ''}</td>
-          <td>
+          <td class="actions-cell">
             <button class="btn-acao btn-edit" onclick="editarOS(${index})">✏️</button>
             <button class="btn-acao btn-delete" onclick="excluirOS(${index})">🗑️</button>
           </td>
@@ -437,7 +437,7 @@ function renderizarFinanceiro() {
           <td class="${f.tipo === "Entrada" ? "valor-entrada" : "valor-saida"}">R$ ${parseFloat(f.valor).toFixed(2)}</td>
           <td>${f.tipo}</td>
           <td>${f.tipo === "Entrada" ? "Pago" : "A pagar"}</td>
-          <td>
+          <td class="actions-cell">
             <button class="btn-acao btn-edit" onclick="editarLancamento(${f.id})">✏️</button>
             <button class="btn-acao btn-delete" onclick="excluirLancamento(${f.id})">🗑️</button>
           </td>

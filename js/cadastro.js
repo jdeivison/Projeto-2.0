@@ -81,7 +81,7 @@ function renderizarTabelaClientes() {
         <td class="td-endereco" title="${cliente.rua ? enderecoCompleto : ''}">
           ${cliente.rua ? enderecoCompleto : '-'}
         </td>
-        <td>
+        <td class="actions-cell">
           <button class="btn-acao btn-edit" onclick="editarCliente('${cliente.id}')">✏️</button>
           <button class="btn-acao btn-delete" onclick="excluirCliente('${cliente.id}')">🗑️</button>
         </td>
