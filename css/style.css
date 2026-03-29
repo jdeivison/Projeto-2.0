@@ -40,7 +40,7 @@ html {
   background: var(--bg-color);
   color: var(--text-main);
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 .wrapper {
@@ -730,3 +730,30 @@ section {
   text-align: left; /* Melhora a leitura de endereços */
   cursor: help; /* Indica que há mais informações (no title) */
 }
+
+/* Estilização da barra de rolagem para navegadores WebKit (Chrome, Safari) */
+.table-container::-webkit-scrollbar {
+  width: 8px; /* Largura da barra de rolagem */
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: var(--input-bg); /* Cor do fundo da trilha */
+  border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background-color: var(--primary); /* Cor da barra de rolagem */
+  border-radius: 10px;
+  border: 2px solid var(--input-bg); /* Espaçamento ao redor da barra */
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #2980b9; /* Cor da barra ao passar o mouse */
+}
+
+/* Estilo específico para a tabela de cadastro para forçar a rolagem */
+.tabela-cadastro-container {
+  max-height: 300px; /* Define uma altura máxima menor para a tabela de clientes */
+  overflow-y: auto; /* Garante que a barra de rolagem vertical apareça quando o conteúdo exceder a altura */
+}
+
