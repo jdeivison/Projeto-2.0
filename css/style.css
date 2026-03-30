@@ -443,6 +443,14 @@ section {
   max-height: 85vh;
 }
 
+#modal-lista-clientes .modal-content {
+  width: 95%;
+  max-width: 1600px;
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+}
+
 .modal-footer {
     padding-top: 20px;
     border-top: 1px solid var(--border);
