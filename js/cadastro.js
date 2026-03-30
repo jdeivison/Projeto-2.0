@@ -128,6 +128,8 @@ function editarCliente(id) {
 
     document.querySelector('#cliente-form .btn-save').innerText = '💾 Atualizar';
     document.getElementById('cliente-nome').focus();
+    
+    fecharModalClientes(); // Fecha o modal após preencher os dados
   }
 }
 
