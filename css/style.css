@@ -436,8 +436,8 @@ section {
 }
 
 #modal-lista-os .modal-content {
-  width: 95%;
-  max-width: 1600px;
+  width: 70%;
+  max-width: 1000px;
   display: flex;
   flex-direction: column;
   max-height: 85vh;

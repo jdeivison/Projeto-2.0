@@ -257,14 +257,7 @@ function abrirModalListaOS() {
       <thead>
         <tr>
           <th>Selecionar</th>
-          <th>Produto</th>
-          <th>Marca</th>
-          <th>Modelo</th>
-          <th>N° Série</th>
-          <th>Cliente</th>
-          <th>Lacre</th>
-          <th>Etiqueta</th>
-          <th>Inventário</th>
+          <th>Número da OS</th>
           <th>Data</th>
           <th>Ações</th>
         </tr>
@@ -275,14 +268,7 @@ function abrirModalListaOS() {
       tabelaHTML += `
         <tr>
           <td><input type="checkbox" class="os-checkbox" value="${index}" onchange="atualizarBotaoVenda()"></td>
-          <td>${os.pecaProduto || ''}</td>
-          <td>${os.marca || ''}</td>
-          <td>${os.modelo || ''}</td>
-          <td>${os.serie || ''}</td>
-          <td>${os.documento || ''}</td>
-          <td>${os.lacre || ''}</td>
-          <td>${os.etiqueta || ''}</td>
-          <td>${os.inventario || ''}</td>
+          <td>${os.numero || ''}</td>
           <td>${os.dataCadastro || ''}</td>
           <td class="actions-cell">
             <button class="btn-acao btn-edit" onclick="editarOS(${index})">✏️</button>
@@ -385,6 +371,15 @@ function salvarOS(event) {
 
   let historico = JSON.parse(localStorage.getItem("meu_sistema_os")) || [];
 
+  // Gerar número da OS
+  let numeroOS = "GP-1001";
+  if (historico.length > 0) {
+    const ultimosNumeros = historico.map(os => os.numero ? parseInt(os.numero.replace("GP-", "")) : 0);
+    const maiorNumero = Math.max(...ultimosNumeros);
+    numeroOS = "GP-" + (maiorNumero + 1);
+  }
+  osData.numero = numeroOS;
+
   if (osEmEdicao !== null) {
     // Modo de Edição
     historico[osEmEdicao] = osData;
@@ -392,7 +387,7 @@ function salvarOS(event) {
   } else {
     // Modo de Criação
     historico.push(osData);
-    exibirAviso("✅ OS Salva com sucesso!");
+    exibirAviso(`✅ OS ${numeroOS} Salva com sucesso!`);
   }
 
   localStorage.setItem("meu_sistema_os", JSON.stringify(historico));
