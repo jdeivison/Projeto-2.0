@@ -130,5 +130,43 @@ function excluirEstoque(index) {
   );
 }
 
+function darBaixaEstoque(nome, marca, modelo, quantidade) {
+  if (!nome || !quantidade || quantidade <= 0) {
+    console.error("Dados insuficientes para dar baixa no estoque.");
+    return false;
+  }
+
+  let estoque = JSON.parse(localStorage.getItem("estoque")) || [];
+  const index = estoque.findIndex(
+    (item) =>
+      item.nome.toLowerCase() === nome.toLowerCase() &&
+      (item.marca || "").toLowerCase() === (marca || "").toLowerCase() &&
+      (item.modelo || "").toLowerCase() === (modelo || "").toLowerCase()
+  );
+
+  if (index !== -1) {
+    if (estoque[index].qtd >= quantidade) {
+      estoque[index].qtd -= quantidade;
+      localStorage.setItem("estoque", JSON.stringify(estoque));
+      console.log(`Baixa de ${quantidade} unidade(s) do item "${nome}" realizada com sucesso.`);
+      
+      // Opcional: remover item se a quantidade zerar
+      if (estoque[index].qtd === 0) {
+        // Você pode decidir remover o item ou apenas deixá-lo com quantidade 0
+        // estoque.splice(index, 1);
+        // localStorage.setItem("estoque", JSON.stringify(estoque));
+      }
+      
+      return true;
+    } else {
+      exibirAviso(`Estoque insuficiente para o item "${nome}". Quantidade atual: ${estoque[index].qtd}`);
+      return false;
+    }
+  } else {
+    exibirAviso(`Item "${nome}" não encontrado no estoque para dar baixa.`);
+    return false;
+  }
+}
+
 
 

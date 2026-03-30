@@ -388,6 +388,9 @@ function salvarOS(event) {
     // Modo de Criação
     historico.push(osData);
     exibirAviso(`✅ OS ${numeroOS} Salva com sucesso!`);
+    
+    // Dá baixa no estoque
+    darBaixaEstoque(osData.pecaProduto, osData.marca, osData.modelo, 1);
   }
 
   localStorage.setItem("meu_sistema_os", JSON.stringify(historico));
