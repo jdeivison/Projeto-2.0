@@ -149,7 +149,13 @@ function excluirCliente(id) {
   );
 }
 
-function showClienteTable() {
-  const tableContainer = document.querySelector('.tabela-cadastro-container');
-  tableContainer.scrollIntoView({ behavior: 'smooth' });
+function abrirModalClientes() {
+  renderizarTabelaClientes();
+  const modal = document.getElementById('modal-lista-clientes');
+  modal.style.display = 'block';
+}
+
+function fecharModalClientes() {
+  const modal = document.getElementById('modal-lista-clientes');
+  modal.style.display = 'none';
 }

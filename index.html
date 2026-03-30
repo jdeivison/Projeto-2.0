@@ -270,25 +270,9 @@
               </div>
               <div class="actions">
                 <button type="submit" class="btn btn-save">💾 Cadastrar</button>
-                <button type="button" class="btn btn-view" onclick="showClienteTable()">👁️ Ver Lista</button>
+                <button type="button" class="btn btn-view" onclick="abrirModalClientes()">👁️ Ver Lista</button>
               </div>
             </form>
-
-            <div class="table-container tabela-cadastro-container" style="margin-top: 30px;">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>Nome</th>
-                    <th>CPF</th>
-                    <th>Contato</th>
-                    <th>E-mail</th>
-                    <th>Endereço</th>
-                    <th>Ações</th>
-                  </tr>
-                </thead>
-                <tbody id="corpo-tabela-clientes"></tbody>
-              </table>
-            </div>
           </section>
 
           <section id="estoque-section" style="display: none">
@@ -508,6 +492,30 @@
             </table>
           </section>
         </main>
+      </div>
+    </div>
+
+    <div id="modal-lista-clientes" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Lista de Clientes</h3>
+          <span class="close" onclick="fecharModalClientes()">&times;</span>
+        </div>
+        <div class="table-container tabela-cadastro-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Contato</th>
+                <th>E-mail</th>
+                <th>Endereço</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="corpo-tabela-clientes"></tbody>
+          </table>
+        </div>
       </div>
     </div>
 
