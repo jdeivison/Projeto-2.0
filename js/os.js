@@ -703,7 +703,7 @@ function fecharModalVenda() {
   document.getElementById('modal-valor-venda').style.display = 'none';
 }
 
-function confirmarVenda() {
+function confirmarVendaOS() {
   const valor = parseFloat(document.getElementById('input-valor-venda').value);
   if (isNaN(valor) || valor <= 0) {
     return exibirAviso("Por favor, insira um valor de venda válido.");
@@ -719,12 +719,9 @@ function confirmarVenda() {
 
   salvarNoFinanceiro(`Venda SN: ${os.serie}`, valor, "Entrada");
 
-  const win = window.open("", "", "height=600,width=800");
-  win.document.write(
-    `<html><body style="font-family:sans-serif; padding:40px;"><h1>NOTA DE VENDA</h1><p>Cliente: ${os.documento}</p><p>Valor: R$ ${valor.toFixed(2)}</p><hr><h2>VERSO (EQUIPAMENTO)</h2><p>Marca: ${os.marca} | Série: ${os.serie}</p><p>Lacre: ${os.lacre} | Etiqueta: ${os.etiqueta}</p><script>window.print();</script></body></html>`,
-  );
-  win.document.close();
-  
+  // Gera PDF da OS
+  gerarPDFOS(os, valor);
+
   fecharModalVenda();
   document.getElementById('input-valor-venda').value = ''; // Limpa o input
 }
@@ -758,3 +755,40 @@ window.onload = () => {
   // Apenas o dashboard precisa de uma atualização inicial.
   atualizarDashboard();
 };
+
+// Função para gerar PDF da Ordem de Serviço
+function gerarPDFOS(os, valor) {
+  const element = document.createElement('div');
+  element.innerHTML = `
+    <div style="font-family: Arial, sans-serif; padding: 40px; max-width: 600px; margin: 0 auto;">
+      <h1 style="text-align: center; color: #333;">NOTA DE VENDA</h1>
+      <h2 style="border-bottom: 2px solid #333; padding-bottom: 10px;">Dados da Ordem de Serviço</h2>
+      <p><strong>Número da OS:</strong> ${os.numero || ''}</p>
+      <p><strong>Data de Cadastro:</strong> ${os.dataCadastro || ''}</p>
+      <p><strong>Peça/Produto:</strong> ${os.pecaProduto || ''}</p>
+      <p><strong>Marca:</strong> ${os.marca || ''}</p>
+      <p><strong>Modelo:</strong> ${os.modelo || ''}</p>
+      <p><strong>N° de Série:</strong> ${os.serie || ''}</p>
+      <p><strong>Nome do Cliente:</strong> ${os.nomeCliente || ''}</p>
+      <p><strong>CPF/CNPJ Cliente:</strong> ${os.documento || ''}</p>
+      <p><strong>N° Lacre:</strong> ${os.lacre || ''}</p>
+      <p><strong>Etiqueta:</strong> ${os.etiqueta || ''}</p>
+      <p><strong>Inventário:</strong> ${os.inventario || ''}</p>
+      <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
+      <h2 style="color: #666;">Valor da Venda</h2>
+      <p style="font-size: 18px; font-weight: bold; color: #28a745;">R$ ${valor.toFixed(2)}</p>
+      <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;">
+      <p style="text-align: center; font-size: 12px; color: #666;">Documento gerado automaticamente pelo Sistema Gestão Pro</p>
+    </div>
+  `;
+
+  const options = {
+    margin: 1,
+    filename: `OS_${os.numero || 'sem_numero'}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+  };
+
+  html2pdf().set(options).from(element).save();
+}
