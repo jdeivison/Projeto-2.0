@@ -495,7 +495,7 @@ function salvarNoFinanceiro(desc, valor, tipo) {
 
 function renderizarFinanceiro() {
   const lista = JSON.parse(localStorage.getItem("financeiro_dados")) || [];
-  document.getElementById("corpo-financeiro").innerHTML = lista
+  const corpoTabela = lista
     .map(
       (f) =>
         `<tr>
@@ -511,6 +511,18 @@ function renderizarFinanceiro() {
         </tr>`,
     )
     .join("");
+
+  document.getElementById("corpo-financeiro").innerHTML = corpoTabela;
+
+  // Controla o scroll baseado na quantidade de itens
+  const container = document.getElementById("financeiro-table-container");
+  if (lista.length >= 3) {
+    container.style.maxHeight = "300px";
+    container.style.overflowY = "auto";
+  } else {
+    container.style.maxHeight = "none";
+    container.style.overflowY = "visible";
+  }
 }
 
 function exibirConfirmacao(titulo, mensagem, callbackSim) {

@@ -578,6 +578,29 @@ section {
   font-weight: bold;
 }
 
+/* Container com scroll para tabela do financeiro */
+#financeiro-table-container {
+  transition: max-height 0.3s ease, overflow-y 0.3s ease;
+}
+
+#financeiro-table-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+#financeiro-table-container::-webkit-scrollbar-track {
+  background: var(--input-bg);
+  border-radius: 4px;
+}
+
+#financeiro-table-container::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+#financeiro-table-container::-webkit-scrollbar-thumb:hover {
+  background: var(--text-sub);
+}
+
 /* estilo do input do financeiro */
 .input-box {
   padding: 12px;
