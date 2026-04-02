@@ -729,7 +729,7 @@ function confirmarVendaOS() {
     return exibirAviso("Ordem de Serviço não encontrada!");
   }
 
-  salvarNoFinanceiro(`Venda SN: ${os.serie}`, valor, "Entrada");
+  salvarNoFinanceiro(`Venda OS: ${os.numero}`, valor, "Entrada");
 
   // Gera PDF da OS
   gerarPDFOS(os, valor);

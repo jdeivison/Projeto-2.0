@@ -38,7 +38,7 @@ function confirmarVenda() {
 
   // 1. Registrar no Financeiro como Entrada
   salvarNoFinanceiro(
-    `Venda/OS SN: ${dadosVendaAtual.serie}`,
+    `Venda OS: ${dadosVendaAtual.numero || dadosVendaAtual.serie}`,
     valorVenda,
     "Entrada",
   );
