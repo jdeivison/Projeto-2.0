@@ -5,6 +5,27 @@ function cadastrarCliente(event) {
   // Previne o comportamento padrão de submissão do formulário, que recarregaria a página
   event.preventDefault();
 
+  // Validação de campos obrigatórios
+  const campos = [
+    { id: 'cliente-nome', nome: 'Nome Completo' },
+    { id: 'cliente-cpf', nome: 'CPF/CNPJ' },
+    { id: 'cliente-contato', nome: 'WhatsApp/Telefone' },
+    { id: 'cliente-email', nome: 'E-mail' },
+    { id: 'cliente-cep', nome: 'CEP' },
+    { id: 'cliente-rua', nome: 'Rua' },
+    { id: 'cliente-numero', nome: 'Número' },
+    { id: 'cliente-bairro', nome: 'Bairro' },
+    { id: 'cliente-cidade', nome: 'Cidade' }
+  ];
+
+  for (const campo of campos) {
+    const valor = document.getElementById(campo.id).value.trim();
+    if (!valor) {
+      exibirAviso(`Campo "${campo.nome}" é obrigatório!`);
+      return;
+    }
+  }
+
   // Coleta os valores dos campos de nome e CPF do formulário
   const nome = document.getElementById('cliente-nome').value;
   const cpf = document.getElementById('cliente-cpf').value;
@@ -15,13 +36,6 @@ function cadastrarCliente(event) {
   const numero = document.getElementById('cliente-numero').value;
   const bairro = document.getElementById('cliente-bairro').value;
   const cidade = document.getElementById('cliente-cidade').value;
-
-  // Validação simples para garantir que os campos obrigatórios não estão vazios
-  if (!nome || !cpf) {
-    // A função exibirAviso está definida em os.js e mostra um modal de aviso
-    exibirAviso('Por favor, preencha os campos obrigatórios (Nome e CPF).');
-    return;
-  }
 
   // Validação simples do e-mail
   if (email && (!email.includes('@') || !email.includes('.com'))) {
