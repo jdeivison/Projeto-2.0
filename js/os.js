@@ -356,18 +356,40 @@ function filtrarBusca() {
 
 function salvarOS(event) {
   event.preventDefault();
+
+  // Validação de campos obrigatórios
+  const campos = [
+    { id: 'peca-produto', nome: 'Peça / Produto' },
+    { id: 'marca', nome: 'Marca' },
+    { id: 'modelo', nome: 'Modelo' },
+    { id: 'serie', nome: 'N° de Série' },
+    { id: 'nome-cliente', nome: 'Nome' },
+    { id: 'documento-cliente', nome: 'CPF/CNPJ Cliente' },
+    { id: 'lacre', nome: 'N° Lacre' },
+    { id: 'etiqueta', nome: 'Etiqueta' },
+    { id: 'inventario', nome: 'Inventário' }
+  ];
+
+  for (const campo of campos) {
+    const valor = document.getElementById(campo.id).value.trim();
+    if (!valor) {
+      exibirAviso(`Campo "${campo.nome}" é obrigatório!`);
+      return;
+    }
+  }
+
   const osData = {
     pecaProduto: document.getElementById("peca-produto").value,
     marca: document.getElementById("marca").value,
     modelo: document.getElementById("modelo").value,
     serie: document.getElementById("serie").value,
+    nomeCliente: document.getElementById("nome-cliente").value,
     documento: document.getElementById("documento-cliente").value,
     lacre: document.getElementById("lacre").value,
     etiqueta: document.getElementById("etiqueta").value,
     inventario: document.getElementById("inventario").value,
     dataCadastro: new Date().toLocaleDateString(),
   };
-  if (!osData.serie) return exibirAviso("Série Obrigatória!");
 
   let historico = JSON.parse(localStorage.getItem("meu_sistema_os")) || [];
 
