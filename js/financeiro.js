@@ -164,7 +164,7 @@ function atualizarDashboard() {
   }
 
   // Conta OS ativas (status diferente de "pendente")
-  const osAtivas = os.filter(o => o.status !== "pendente").length;
+  const osAtivas = os.filter(o => o.status === "ativo").length;
   document.getElementById("count-os").innerText = osAtivas;
 
   // Conta pendências (OS com status "pendente")

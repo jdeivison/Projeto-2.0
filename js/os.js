@@ -249,7 +249,7 @@ function abrirModalListaOS() {
   const modal = document.getElementById("modal-lista-os");
   const conteudo = document.getElementById("lista-os-content");
   const ordens = JSON.parse(localStorage.getItem("meu_sistema_os")) || [];
-  const ordensAtivas = ordens.filter(os => os.status !== "pendente");
+  const ordensAtivas = ordens.filter(os => os.status === "ativo");
 
   if (ordensAtivas.length === 0) {
     conteudo.innerHTML = "<p>Nenhuma Ordem de Serviço ativa encontrada.</p>";
