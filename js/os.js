@@ -357,14 +357,15 @@ function concluirOSModal() {
   checkboxes.forEach(checkbox => {
     const index = parseInt(checkbox.value);
     if (ordens[index]) {
-      ordens[index].status = "concluida"; // Muda para concluída/garantia
+      ordens[index].status = "garantia"; // Muda para garantia
     }
   });
 
   localStorage.setItem("meu_sistema_os", JSON.stringify(ordens));
-  exibirAviso("OS(s) marcada(s) como concluída(s)!");
+  exibirAviso("OS(s) enviada(s) para Garantias!");
   fecharModalPendencias();
   atualizarDashboard();
+  showSection("remessa-section"); // Vai para a seção de garantias
 }
 
 function editarOS(index) {
@@ -762,7 +763,19 @@ let filtroAtualRemessas = "Todos";
 
 function renderizarRemessas(filtro = "Todos") {
   filtroAtualRemessas = filtro;
-  const lista = JSON.parse(localStorage.getItem("remessas")) || [];
+  const remessas = JSON.parse(localStorage.getItem("remessas")) || [];
+  const ordens = JSON.parse(localStorage.getItem("meu_sistema_os")) || [];
+  const garantias = ordens.filter(os => os.status === "garantia").map(os => ({
+    tipo: "os",
+    item: os.pecaProduto || "OS",
+    sn: os.serie || "",
+    qtd: 1,
+    motivo: "Garantia",
+    status: "Em Garantia",
+    data: os.dataCadastro || "",
+    os: os
+  }));
+  const lista = [...remessas, ...garantias];
   const corpo = document.getElementById("corpo-remessas");
 
   const listaFiltrada =
@@ -778,12 +791,16 @@ function renderizarRemessas(filtro = "Todos") {
       );
 
       let acoes = "";
-      if (r.status === "Aguardando Envio") {
-        acoes = `<button class="btn-save" onclick="atualizarStatusRemessa(${originalIndex}, 'Em Trânsito')">Enviar</button>`;
-      } else if (r.status === "Em Trânsito") {
-        acoes = `<button class="btn-save" onclick="atualizarStatusRemessa(${originalIndex}, 'Concluído')">Receber</button>`;
+      if (r.tipo === "os") {
+        acoes = `<button class="btn-save" onclick="finalizarGarantia(${ordens.indexOf(r.os)})">Finalizar</button>`;
       } else {
-        acoes = "<span>Finalizado</span>";
+        if (r.status === "Aguardando Envio") {
+          acoes = `<button class="btn-save" onclick="atualizarStatusRemessa(${remessas.indexOf(r)}, 'Em Trânsito')">Enviar</button>`;
+        } else if (r.status === "Em Trânsito") {
+          acoes = `<button class="btn-save" onclick="atualizarStatusRemessa(${remessas.indexOf(r)}, 'Concluído')">Receber</button>`;
+        } else {
+          acoes = "<span>Finalizado</span>";
+        }
       }
 
       return `<tr>
@@ -797,6 +814,17 @@ function renderizarRemessas(filtro = "Todos") {
               </tr>`;
     })
     .join("");
+}
+
+function finalizarGarantia(index) {
+  const ordens = JSON.parse(localStorage.getItem("meu_sistema_os")) || [];
+  if (ordens[index]) {
+    ordens[index].status = "finalizada"; // Muda para finalizada
+    localStorage.setItem("meu_sistema_os", JSON.stringify(ordens));
+    exibirAviso("Garantia finalizada!");
+    renderizarRemessas(filtroAtualRemessas);
+    atualizarDashboard();
+  }
 }
 
 function filtrarRemessas(filtro, element) {
