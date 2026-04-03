@@ -757,6 +757,12 @@ section {
   overflow-y: auto;  /* Adiciona a barra de rolagem vertical quando necessário */
   border: 1px solid var(--border); /* Borda sutil para o container */
   border-radius: 12px; /* Cantos arredondados */
+/* Container para tabelas com rolagem */
+.table-container {
+  max-height: 400px; /* Altura máxima para ativar a rolagem */
+  overflow-y: auto; /* Permite rolagem vertical */
+  border: 1px solid var(--border);
+  border-radius: 8px;
   margin-top: 25px; /* Adiciona espaço acima da tabela */
 }
 
