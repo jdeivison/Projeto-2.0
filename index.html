@@ -652,6 +652,25 @@
       </div>
     </div>
 
+    <div id="modal-editar-garantia" class="modal">
+      <div class="modal-content" style="width: 400px">
+        <h3>Editar Período de Garantia</h3>
+        <div class="input-group" style="margin: 20px 0">
+          <label>Novo Período (ex: 3 meses, 90 dias, Sem garantia)</label>
+          <input
+            type="text"
+            id="edit-periodo-garantia"
+            class="input-box"
+            placeholder="Ex: 90 dias"
+          />
+        </div>
+        <div class="actions" style="justify-content: flex-end; padding-top: 10px; border-top: none">
+          <button type="button" class="btn btn-cancel" onclick="fecharModalEditarGarantia()">Cancelar</button>
+          <button type="button" class="btn btn-save" onclick="salvarEdicaoGarantia()">Salvar</button>
+        </div>
+      </div>
+    </div>
+
     <div id="modal-editar-financeiro" class="modal">
       <div class="modal-content" style="width: 500px">
         <h3>Editar Lançamento Financeiro</h3>

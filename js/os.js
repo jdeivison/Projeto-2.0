@@ -803,7 +803,7 @@ function renderizarRemessas(filtro = "Todos") {
 
   corpo.innerHTML = listaFiltrada
     .map((r, index) => {
-      let acoes = `<button class="btn-acao btn-edit" onclick="editarOS(${ordens.indexOf(r.os)})">✏️</button> <button class="btn-acao btn-delete" onclick="excluirOS(${ordens.indexOf(r.os)})">🗑️</button>`;
+      let acoes = `<button class="btn-acao btn-edit" onclick="editarGarantia(${ordens.indexOf(r.os)})">✏️</button> <button class="btn-acao btn-delete" onclick="excluirOS(${ordens.indexOf(r.os)})">🗑️</button>`;
 
       return `<tr>
                   <td>${r.numero}</td>
@@ -824,6 +824,38 @@ function finalizarGarantia(index) {
     exibirAviso("Garantia finalizada!");
     renderizarRemessas(filtroAtualRemessas);
     atualizarDashboard();
+  }
+}
+
+let garantiaEmEdicao = null;
+
+function editarGarantia(index) {
+  const ordens = JSON.parse(localStorage.getItem("meu_sistema_os")) || [];
+  const os = ordens[index];
+  if (!os) return exibirAviso("Ordem de serviço não encontrada!");
+
+  garantiaEmEdicao = index;
+  document.getElementById('edit-periodo-garantia').value = os.periodoGarantia || 'Não informado';
+  document.getElementById('modal-editar-garantia').style.display = 'block';
+}
+
+function fecharModalEditarGarantia() {
+  document.getElementById('modal-editar-garantia').style.display = 'none';
+  garantiaEmEdicao = null;
+}
+
+function salvarEdicaoGarantia() {
+  if (garantiaEmEdicao === null) return;
+
+  const novoPeriodo = document.getElementById('edit-periodo-garantia').value.trim() || 'Não informado';
+  const ordens = JSON.parse(localStorage.getItem("meu_sistema_os")) || [];
+  
+  if (ordens[garantiaEmEdicao]) {
+    ordens[garantiaEmEdicao].periodoGarantia = novoPeriodo;
+    localStorage.setItem("meu_sistema_os", JSON.stringify(ordens));
+    exibirAviso("Período de garantia atualizado com sucesso!");
+    renderizarRemessas(filtroAtualRemessas);
+    fecharModalEditarGarantia();
   }
 }
 
