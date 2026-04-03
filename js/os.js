@@ -353,16 +353,29 @@ function concluirOSModal() {
     return exibirAviso("Selecione pelo menos uma Ordem de Serviço.");
   }
 
+  document.getElementById('modal-periodo-garantia').style.display = 'block';
+}
+
+function fecharModalGarantia() {
+  document.getElementById('modal-periodo-garantia').style.display = 'none';
+}
+
+function confirmarConclusaoOS() {
+  const checkboxes = document.querySelectorAll('.pendencia-checkbox:checked');
+  const periodoGarantia = document.getElementById('input-periodo-garantia').value.trim() || 'Não informado';
   const ordens = JSON.parse(localStorage.getItem("meu_sistema_os")) || [];
+  
   checkboxes.forEach(checkbox => {
     const index = parseInt(checkbox.value);
     if (ordens[index]) {
       ordens[index].status = "garantia"; // Muda para garantia
+      ordens[index].periodoGarantia = periodoGarantia;
     }
   });
 
   localStorage.setItem("meu_sistema_os", JSON.stringify(ordens));
   exibirAviso("OS(s) enviada(s) para Garantias!");
+  fecharModalGarantia();
   fecharModalPendencias();
   atualizarDashboard();
   showSection("remessa-section"); // Vai para a seção de garantias
@@ -769,7 +782,7 @@ function renderizarRemessas(filtro = "Todos") {
     numero: os.numero,
     cliente: os.nomeCliente,
     data: os.dataCadastro || "",
-    periodo: "90 dias", // Default warranty period
+    periodo: os.periodoGarantia || "Não informado", // Dinâmico com base na OS
     status: os.status === "garantia" ? "Em Garantia" : "Finalizada",
     os: os
   }));
